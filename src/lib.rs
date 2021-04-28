@@ -1,6 +1,7 @@
 use std::{sync::atomic::{AtomicU64, Ordering}, time::Duration};
 use quanta::Instant;
 
+#[derive(Default, Debug)]
 pub struct AtomicInstant(AtomicU64);
 
 impl AtomicInstant {
@@ -30,5 +31,9 @@ impl AtomicInstant {
 
     pub fn set_millis(&self, millis: u64) {
         self.0.store(millis, Ordering::SeqCst);
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.as_millis() == 0
     }
 }
