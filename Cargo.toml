@@ -1,0 +1,12 @@
+[package]
+name = "atomic-instant"
+version = "0.1.0"
+authors = ["Protryon <max.bruce12@gmail.com>"]
+edition = "2018"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/Protryon/atomic-instant"
+description = "Atomic wrapper for quanta::Instant"
+keywords = [ "time", "atomic", "instant" ]
+
+[dependencies]
+quanta = "0.7"
