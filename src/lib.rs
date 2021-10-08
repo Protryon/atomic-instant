@@ -1,39 +1,24 @@
-use std::{sync::atomic::{AtomicU64, Ordering}, time::Duration};
+use std::time::Duration;
+use crossbeam_utils::atomic::AtomicCell;
 use quanta::Instant;
 
-#[derive(Default, Debug)]
-pub struct AtomicInstant(AtomicU64);
+#[derive(Debug)]
+pub struct AtomicInstant(AtomicCell<Instant>);
 
 impl AtomicInstant {
-    pub const fn empty() -> Self {
-        Self(AtomicU64::new(0))
-    }
-    
     pub fn now() -> Self {
-        Self(AtomicU64::new(Instant::now().as_unix_duration().as_millis() as u64))
-    }
-
-    pub const fn from_millis(millis: u64) -> Self {
-        Self(AtomicU64::new(millis))
+        Self(AtomicCell::new(Instant::now()))
     }
 
     pub fn elapsed(&self) -> Duration {
-        Duration::from_millis(Instant::now().as_unix_duration().as_millis() as u64 - self.0.load(Ordering::SeqCst))
+        Instant::now() - self.0.load()
     }
 
-    pub fn as_millis(&self) -> u64 {
-        self.0.load(Ordering::SeqCst)
+    pub fn duration_since(&self, earlier: Self) -> Duration {
+        self.0.load().duration_since(earlier.0.load())
     }
 
     pub fn set_now(&self) {
-        self.0.store(Instant::now().as_unix_duration().as_millis() as u64, Ordering::SeqCst);
-    }
-
-    pub fn set_millis(&self, millis: u64) {
-        self.0.store(millis, Ordering::SeqCst);
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.as_millis() == 0
+        self.0.store(Instant::now());
     }
 }

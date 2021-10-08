@@ -9,4 +9,5 @@ description = "Atomic wrapper for quanta::Instant"
 keywords = [ "time", "atomic", "instant" ]
 
 [dependencies]
-quanta = "0.7"
+crossbeam-utils = "0.8"
+quanta = "0.9"
